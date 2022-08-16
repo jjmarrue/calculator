@@ -20,7 +20,7 @@ let operatorVal = null;
 // Operations 
 
 function addTwoNumbers(num1, num2) {
-  return num1 + num2;
+  return +num1 + +num2;
 }
 
 function substractTwoNumbers(num1, num2) {
@@ -38,7 +38,7 @@ function divideTwoNumbers(num1, num2) {
   return num1 / num2;
 }
 
-// Call operators
+// Use correct operator on numbers
 
 function operate(operator, num1, num2) {
   if (operator === '-') {
@@ -78,7 +78,7 @@ numbers.forEach(num => {
       }
       
     } else {
-      if (num2 === 0) {
+      if (num2 === 0 || num2 == null) {
         num2 = lastPressedVal;
       } else {
         num2 += lastPressedVal;
@@ -93,14 +93,18 @@ operations.forEach(operator => {
   operator.addEventListener('click', (e) =>{
     operatorVal = operator.value; 
     total = operate(operatorVal, num1, num2);
+    num1 = total; //first number now holds the current total
+    num2 = null;  //reset second number so user can set a new value
+    console.log(`num1 on operation: ${num1}`);
+    console.log(`num2 on operation: ${num2}`);
     console.log(`total: ${total}`); 
   });
 });
 
 
   equals.addEventListener('click', (e) => {
-    total = num1;
-    total = operate(operator, num1, num2);
+    // total = num1;
+    // total = operate(operator, num1, num2);
   
   });
 
