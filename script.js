@@ -12,8 +12,10 @@ const operations = document.querySelectorAll('.operator');
 // Define global variables
 
 display.textContent = "0";
-let total, num1, num2 = 0;
-let operatorVal = '+';
+let total = 0;
+let num1 = 0;
+let num2 = 0;
+let operatorVal = null;
 
 // Operations 
 
@@ -67,26 +69,39 @@ function operate(operator, num1, num2) {
 
 numbers.forEach(num => {
   num.addEventListener('click', (e) => {
-    
+    let lastPressedVal = num.value;
+    if (operatorVal == null) {
+      if (num1 === 0) {
+        num1 = lastPressedVal;
+      } else {
+        num1 += lastPressedVal;
+      }
+      
+    } else {
+      if (num2 === 0) {
+        num2 = lastPressedVal;
+      } else {
+        num2 += lastPressedVal;
+      }           
+    }
+    console.log(`num1: ${num1}`);
+    console.log(`num2: ${num2}`);
   });
 });
 
 operations.forEach(operator => {
   operator.addEventListener('click', (e) =>{
-    operatorVal = operator.value;
-    
+    operatorVal = operator.value; 
+    total = operate(operatorVal, num1, num2);
+    console.log(`total: ${total}`); 
   });
 });
 
 
   equals.addEventListener('click', (e) => {
-    operate(operator, num1, num2);
+    total = num1;
+    total = operate(operator, num1, num2);
   
   });
 
 
-
-
-
-obtainNumber();
-recordOperation();
