@@ -22,25 +22,33 @@ let operatorVal = null;
 let previousOperator;
 let currentClickedBtn;
 const decimalPlaces = 8;
-// Functions for each operation 
+
+// Use number.EPSILON to provide accurate rounding
+
+Number.prototype.round = function(n) {
+  const d = Math.pow(10, n);
+  return Math.round((this + Number.EPSILON) * d) / d;
+}
+
+// Functions for each operation. parseFloat removes trailing zeros.
 
 function addTwoNumbers(num1, num2) {
-  return (+num1 + +num2).toFixed(decimalPlaces);
+  return parseFloat((+num1 + +num2).round(decimalPlaces));
 }
 
 function substractTwoNumbers(num1, num2) {
-  return (+num1 - +num2).toFixed(decimalPlaces);
+  return parseFloat((+num1 - +num2).toFixed(decimalPlaces));
 }
 
 function multiplyTwoNumbers(num1, num2) {
-  return (+num1 * +num2).toFixed(decimalPlaces);
+  return parseFloat((+num1 * +num2).toFixed(decimalPlaces));
 }
 
 function divideTwoNumbers(num1, num2) {
   if (num2 == 0) {
     return 'LOL';
   } 
-    return (+num1 / +num2).toFixed(decimalPlaces);
+    return parseFloat((+num1 / +num2).toFixed(decimalPlaces));
  
 }
 
