@@ -64,7 +64,7 @@ function operate(operator, num1, num2) {
   if (operator === 'x') {
     return multiplyTwoNumbers(num1, num2);
   }
-  if (operator === '/') {
+  if (operator === '÷') {
     return divideTwoNumbers(num1, num2);
   }
 }
@@ -94,8 +94,7 @@ function trackClickedButtons() {
         } else {
           tempNum += currentClickedBtn;
           result.textContent = tempNum;
-        }
-        console.log(`num on screen: ${tempNum}`);     
+        }   
       }
       
       // OPERATORS
@@ -104,7 +103,6 @@ function trackClickedButtons() {
         operatorVal = currentClickedBtn;
         calculation.textContent += tempNum;
         calculation.textContent += operatorVal;
-        console.log(`current operator: ${operatorVal}`);
 
         if (num1 === null) {
           num1 = tempNum;
@@ -114,15 +112,10 @@ function trackClickedButtons() {
           tempNum = null;
         }
        
-        // To allow chain operations, perform each operation using the value of the previous operator
+        // To allow chain operations, perform each operation using the value of the previous operator and put total value in num1
 
         if (previousOperator) {
-          console.log(`previous operator: ${previousOperator}`); 
-          console.log(`num1: ${num1}`);
-          console.log(`num2: ${num2}`);
-          total = operate(previousOperator, num1, num2);    
-          console.log(`total: ${total}`);
-
+          total = operate(previousOperator, num1, num2);
           num1 = total;
         }
     }
@@ -141,7 +134,7 @@ equals.addEventListener('click', (e) => {
     console.log(`equals: ${total}`);
     result.textContent = total;
     calculation.textContent = num1 + previousOperator + num2;
-    num1 = total; //first number now holds the current total
+    num1 = total;
     num2 = null;
     operatorVal = null;
   }
