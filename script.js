@@ -22,6 +22,7 @@ let operatorVal = null;
 let previousOperator;
 let currentClickedBtn;
 const decimalPlaces = 8;
+let percentVal = null;
 
 // Use number.EPSILON to provide accurate rounding
 
@@ -52,9 +53,19 @@ function divideTwoNumbers(num1, num2) {
  
 }
 
+function getPercentage(num1, percentVal) {
+  return parseFloat(((+percentVal/100)*num1).toFixed(decimalPlaces));
+}
+
 // Use correct operator on numbers based on operator value
 
-function operate(operator, num1, num2) {
+function operate(operator, num1, num2, percentVal=null) {
+  console.log(percentVal);
+  if (percentVal != null) {
+    num2 = parseFloat(((+num2/100)*(+num1)).toFixed(decimalPlaces));
+    console.log('Percentage: ' + num2);
+  }
+  
   if (operator === '-') {
     return substractTwoNumbers(num1, num2);
   }
@@ -85,25 +96,36 @@ function trackClickedButtons() {
 
       currentClickedBtn = btn.value;
       
+      // PERCENTAGE
+
+      if (btn.id == 'percentage') {
+        percentVal = btn.value;
+        console.log(percentVal);
+      }
+
       // NUMBERS
 
       if (btn.classList.contains('number')) {
         if (tempNum === null) {
           tempNum = currentClickedBtn;
-          result.textContent = tempNum;
+          result.textContent = tempNum;   
         } else {
           tempNum += currentClickedBtn;
           result.textContent = tempNum;
-        }   
+        }
       }
       
+
       // OPERATORS
 
       if (btn.classList.contains('operator') || btn.classList.contains('equals')) {
         operatorVal = currentClickedBtn;
-        calculation.textContent += tempNum;
-        calculation.textContent += operatorVal;
-
+        if (tempNum === null) {
+          tempNum = 0;
+          calculation.textContent += tempNum;
+          calculation.textContent += operatorVal;
+        }
+ 
         if (num1 === null) {
           num1 = tempNum;
           tempNum = null;
@@ -111,12 +133,18 @@ function trackClickedButtons() {
           num2 = tempNum;
           tempNum = null;
         }
+
        
         // To allow chain operations, perform each operation using the value of the previous operator and put total value in num1
 
-        if (previousOperator) {
-          total = operate(previousOperator, num1, num2);
+        if (previousOperator ) {
+           // console.log(`num1: ${num1}`);
+          // console.log(`num2: ${num2}`);
+          // console.log(`equals: ${total}`);
+          total = operate(previousOperator, num1, num2, percentVal);
           num1 = total;
+        } else {
+
         }
     }
   });    
@@ -126,17 +154,23 @@ function trackClickedButtons() {
 // Pressing equals handles variables a little differently
 
 equals.addEventListener('click', (e) => {
+  if (tempNum === null) {
+    tempNum = 0;
+  }
+
   if (num1 !== null) {
     num2 = tempNum;
-    total = operate(previousOperator, num1, num2);
-    console.log(`num1: ${num1}`);
-    console.log(`num2: ${num2}`);
-    console.log(`equals: ${total}`);
+    total = operate(previousOperator, num1, num2, percentVal);
+    // console.log(`num1: ${num1}`);
+    // console.log(`num2: ${num2}`);
+    // console.log(`equals: ${total}`);
     result.textContent = total;
     calculation.textContent = num1 + previousOperator + num2;
     num1 = total;
     num2 = null;
-    operatorVal = null;
+    //operatorVal = null;
+  } else {
+    result.textContent = tempNum;
   }
 });
 
