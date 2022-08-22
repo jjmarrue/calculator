@@ -36,13 +36,8 @@ main {
   padding: 0.14em 0.3em 0.1em;
   border-bottom: 0.5px solid black;
   font-size: 1.85em;
-  height: 2em;
-
 }
 
-#display #calculation {
-  font-size: 0.5em;
-}
 
 .btn {
   flex: 1 24.5%;

@@ -19,7 +19,7 @@ let tempNum = null;
 let operatorVal = null;
 let previousOperator;
 let currentClickedBtn;
-const decimalPlaces = 8;
+const decimalPlaces = 10;
 let percentVal = null;
 const myRegex = new RegExp(/^\d*\.?\d*$/);
 
@@ -63,11 +63,6 @@ function getPercentage(num1, num2, percentVal) {
 
 
 function operate(operator, num1, num2) {
-  // if (percentVal != null) {
-  //   num2 = parseFloat(((+num2/100)*(+num1)).toFixed(decimalPlaces));
-  //   console.log('Percentage: ' + num2);
-  // }
-  
   if (operator === '-') {
     return substractTwoNumbers(num1, num2);
   }
@@ -90,7 +85,7 @@ function trackClickedButtons() {
   allBtns.forEach(btn => { 
     btn.addEventListener('click', e => {
 
-      // Keep track of the last operator so it can be used later
+      // Keep track of the last operator so it can be used in the calculation
 
       previousOperator = operatorVal;
 
@@ -98,15 +93,48 @@ function trackClickedButtons() {
 
       currentClickedBtn = btn.value;
       
+      //POSITIVE - NEGATIVE
+
+      if (btn.id === 'plusminus') {
+        if (total !== 0) {
+          total = -total;
+          display.textContent = total; 
+        }
+        else {
+          tempNum = -tempNum;
+          display.textContent = tempNum; 
+        }
+        num2 = null;
+        operatorVal = null;
+      }
+
+
       // PERCENTAGE
 
-      if (btn.id == 'percentage') {
-        percentVal = btn.value;
+      if (btn.id === 'percentage') {
+        percentVal = btn.value;       
+      }
+
+      // DECIMAL
+
+      if (btn.id === 'decimal') {
+        if (display.textContent.indexOf('.') === -1) {
+          if (tempNum === null) {
+            tempNum = currentClickedBtn;
+            display.textContent = tempNum;   
+          } else {
+            tempNum += currentClickedBtn;
+            display.textContent = tempNum;
+          }
+				} else {
+					return false;
+				}
       }
 
       // NUMBERS
 
       if (btn.classList.contains('number')) {
+
         if (tempNum === null) {
           tempNum = currentClickedBtn;
           display.textContent = tempNum;   
@@ -115,22 +143,22 @@ function trackClickedButtons() {
           display.textContent = tempNum;
         }
       }
-      
-
+    
       // OPERATORS
 
       if (btn.classList.contains('operator') || btn.classList.contains('equals')) {
         console.log('operator was pressed');
+        console.log('previousOp: ' + previousOperator);
+        //tempNum = null;
         operatorVal = currentClickedBtn;
        
         // if the first number has not been entered and user presses an operator, it should go 0 [operator] [num2]
 
-        if (num1 == null) {
-          //display.textContent = 0;
+        if (tempNum === null && num1 == null) {
+          num1 = 0;
         } else if (tempNum === null && num1 !== null) {
           tempNum = 0;
-          display.textContent += tempNum;         
-          //display.textContent += operatorVal;
+          display.textContent += tempNum;
         } 
  
         if (num1 === null) {
@@ -149,15 +177,15 @@ function trackClickedButtons() {
        
         // To allow chain operations, perform each operation using the value of the previous operator and put total value in num1
 
-        if (previousOperator ) {
+        if (previousOperator && num2 !== null) {
           total = operate(previousOperator, num1, num2);
           display.textContent = total;
           num1 = total;
           num2 = null;
         }
-        console.log('num1: ' + num1);
-        //console.log('num2: ' + num2);
-        console.log('total: ' + total); 
+        // console.log('num1: ' + num1);
+        // console.log('num2: ' + num2);
+        // console.log('total: ' + total); 
     } 
   });   
 });
@@ -171,20 +199,22 @@ equals.addEventListener('click', (e) => {
     tempNum = 0;
   }
   if (num1 !== null && previousOperator !== null) {
-
     if(percentVal !== null) {
       num2 = getPercentage(num1, tempNum, percentVal);
     } else {
-      //num2 = tempNum;
+      num2 = tempNum;
     }
     total = operate(previousOperator, num1, num2);
     console.log(num2);
     display.textContent = total;
     percentVal = null;
   } else {
-    display.textContent = tempNum;
+    display.textContent = total;
   }
   num1 = total;
+  //operatorVal = null;
+  //console.log(previousOperator);
+  //tempNum = null;
   console.log('num1: ' + num1);
   console.log('num2: ' + num2);
   console.log('total: ' + total);
