@@ -21,7 +21,6 @@ let previousOperator;
 let currentClickedBtn;
 const decimalPlaces = 10;
 let percentVal = null;
-const myRegex = new RegExp(/^\d*\.?\d*$/);
 
 // Use number.EPSILON to provide accurate rounding
 
@@ -55,12 +54,7 @@ function getPercentage(num1, num2, percentVal) {
   return  parseFloat(((+num2/100)*(+num1)).toFixed(decimalPlaces));
 }
 
- 
-
-
-
 // Use correct operator on numbers based on operator value
-
 
 function operate(operator, num1, num2) {
   if (operator === '-') {
@@ -93,6 +87,18 @@ function trackClickedButtons() {
 
       currentClickedBtn = btn.value;
       
+      // DELETE CHARACTER FROM NUMBER
+
+      if (btn.id === 'backspace') {
+        const arrayofNums = Array.from(String(tempNum), Number);
+        arrayofNums.pop();
+        tempNum = arrayofNums.join('');
+        if (tempNum.length === 0) {
+          tempNum = 0;
+        }
+        display.textContent = tempNum;
+      }
+
       //POSITIVE - NEGATIVE
 
       if (btn.id === 'plusminus') {
@@ -104,7 +110,7 @@ function trackClickedButtons() {
           tempNum = -tempNum;
           display.textContent = tempNum; 
         }
-        num2 = null;
+        //num2 = null;
         operatorVal = null;
       }
 
