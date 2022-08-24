@@ -1,17 +1,9 @@
 // Grab DOM elements
 
-const clear = document.getElementById('clear');
-const percent = document.getElementById('percentage');
-const plusminus = document.getElementById('plusminus');
-const decimal = document.getElementById('decimal');
-const equals = document.getElementById('equals');
 const display = document.querySelector('#display span');
-const numbers = document.querySelectorAll('.number');
-const operations = document.querySelectorAll('.operator');
-const allBtns = document.querySelectorAll('.btn');
-const buttons = document.querySelector(".container");
+const buttons = document.querySelector('.container');
 
-// Define global variables
+// Define variables
 
 let num1 = null;
 let num2 = null;
@@ -19,7 +11,6 @@ let total = 0;
 let tempNum = '';
 let operatorVal = null;
 let previousOperator;
-let currentClickedBtn;
 const decimalPlaces = 10;
 let percentVal = null;
 const maxDigits = 10;
@@ -77,7 +68,6 @@ function getPercentage(num1, num2, percentVal) {
   return  parseFloat(((+num2/100)*(+num1)).toFixed(decimalPlaces));
 }
 
-
 // Use correct operator on numbers based on operator value
 
 function operate(operator, num1, num2) {
@@ -96,8 +86,8 @@ function operate(operator, num1, num2) {
 }
 
 
-const calculatorAction = (e) => {
-  console.log(e);
+const performCalculations = (e) => {
+
   previousOperator = operatorVal;
 
   // Handle backspace
@@ -221,21 +211,16 @@ const calculatorAction = (e) => {
     }
     operatorVal = null;
   }
-
 }
 
 buttons.addEventListener('click', (e) => {
   const buttonValue = (e.target.value);
-  calculatorAction(buttonValue);
+  performCalculations(buttonValue);
 })
-
-
 
 document.addEventListener('keydown', function(e) {
   let eventKey = (e.key) ? e.key : KeyboardEvent.keyCode;
   if (eventKey >= 0 && eventKey <= 9 || eventKey == 'Enter' || eventKey == '%' || eventKey == 'Escape' || eventKey == '/' || eventKey == '*' || eventKey == '-' || eventKey == '+' || eventKey == '=' || eventKey == '.') {
-    calculatorAction(e.key);   
+    performCalculations(e.key);   
   }
 });
-
-
