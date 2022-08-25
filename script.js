@@ -95,14 +95,14 @@ function operate(operator="+", num1=0, num2=0) {
   }
 }
 
-
 const performCalculations = (e) => {
   
   if (e == 'Backspace') {
-    const arrayofNums = Array.from(String(tempNum), Number);
-    arrayofNums.pop();
-    tempNum = arrayofNums.join('');
-    if (tempNum.length === 0) {
+    const arrayofChars = Array.from(String(tempNum), String);
+    console.log(arrayofChars);
+    arrayofChars.pop();
+    tempNum = arrayofChars.join('');
+    if (tempNum.length == 0) {
       tempNum = 0;
     }
     display.textContent = tempNum;
@@ -131,7 +131,6 @@ const performCalculations = (e) => {
     if (equalEnabled) {
       num2 =null;
     }
-
     if (num1 == 0) {
       num1 = tempNum;
     } else {
@@ -169,11 +168,13 @@ const performCalculations = (e) => {
 
   if (e == 'Enter') {
     equalEnabled = true;
-    if (num1 == 0) {
-      num1 = tempNum;
-    } else {
-      num2 = getPercentage(num1, tempNum, percentVal);
-    }
+    console.log('temp: ' + tempNum);
+    // if (num1 == 0) {
+    //   num1 = tempNum;
+    // } else {
+    //   num2 = getPercentage(num1, tempNum, percentVal);
+    // }
+    num2 = getPercentage(num1, tempNum, percentVal);
     console.log('num1: ' + num1);
     console.log('num2: ' + num2);
     console.log('op: ' + previousOperator);
