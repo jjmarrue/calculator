@@ -5,16 +5,18 @@ const buttons = document.querySelector('.container');
 
 // Define variables
 
-let num1 = null;
-let num2 = null;
+let num1 = 0;  //null
+let num2 = 0;  //null
 let total = 0;
-let tempNum = '';
+let tempNum = 0;
 let operatorVal = null;
 let previousOperator;
-const decimalPlaces = 10;
 let percentVal = null;
+let equalEnabled = false;
+const decimalPlaces = 10;
 const maxDigits = 10;
 const fractionDigits = 8;
+
 
 // Use number.EPSILON to provide accurate rounding
 
@@ -60,17 +62,25 @@ function multiplyTwoNumbers(num1, num2) {
 function divideTwoNumbers(num1, num2) {
   if (num2 == 0) {
     return 'LOL';
-  } 
+  }
     return parseFloat((+num1 / +num2).toFixed(decimalPlaces));
 }
 
-function getPercentage(num1, num2, percentVal) {
-  return  parseFloat(((+num2/100)*(+num1)).toFixed(decimalPlaces));
+function getPercentage(num1, num2, percentVal=null) {
+  if (percentVal != null) {
+    return  parseFloat(((+num2/100)*(+num1)));
+  }
+  else {
+    return num2;
+  }  
 }
 
 // Use correct operator on numbers based on operator value
 
-function operate(operator, num1, num2) {
+function operate(operator="+", num1=0, num2=0) {
+  if (isNaN(num1) || isNaN(num2)) {
+    return 'lol nope';
+  }
   if (operator == '-') {
     return substractTwoNumbers(num1, num2);
   }
@@ -87,11 +97,7 @@ function operate(operator, num1, num2) {
 
 
 const performCalculations = (e) => {
-
-  previousOperator = operatorVal;
-
-  // Handle backspace
-
+  
   if (e == 'Backspace') {
     const arrayofNums = Array.from(String(tempNum), Number);
     arrayofNums.pop();
@@ -118,43 +124,38 @@ const performCalculations = (e) => {
   if (e == '%') {
     percentVal = e; 
   }
+  previousOperator = operatorVal;
   
   if (e == '/' || e == '*' || e == '+' || e == '-') {
     operatorVal = e;
-    if (tempNum === null && num1 == null) {
-      num1 = 0;
-    } else if (tempNum === null && num1 !== null) {
-      tempNum = 0;
-      display.textContent += tempNum;
-    } 
-    if (num1 === null) {
-      num1 = tempNum;
-      tempNum = null;
-    } else {  
-      if(percentVal !== null) {
-        console.log(num1);
-        console.log(tempNum);
-        num2 = getPercentage(num1, tempNum, percentVal);
-      } else {
-        num2 = tempNum;
-      }
-      tempNum = null;
+    if (equalEnabled) {
+      num2 =null;
     }
-    
+
+    if (num1 == 0) {
+      num1 = tempNum;
+    } else {
+      num2 = getPercentage(num1, tempNum, percentVal);
+    }
+    tempNum = null;
+    console.log('num1: ' + num1);
+    console.log('num2: ' + num2);
+    console.log('temp: ' + tempNum);
+ 
     // Chanined operations
 
-    if (previousOperator && num2 !== null) {
-      total = operate(previousOperator, num1, num2);
-      total = convertToScientificNotation(total);
+    if (previousOperator && !equalEnabled && num2 != null) { //
+      total =  convertToScientificNotation(operate(previousOperator, num1, num2));
       display.textContent = total;
       num1 = total;
       num2 = null;
+      percentVal = null;
     }
   }
 
   if (e == '.') {
-    if (display.textContent.indexOf('.') === -1) {
-      if (tempNum === null) {
+    if (display.textContent.indexOf('.') == -1) {
+      if (tempNum == null) {
         tempNum = e;
         display.textContent = tempNum;   
       } else {
@@ -167,37 +168,25 @@ const performCalculations = (e) => {
   }
 
   if (e == 'Enter') {
-    if (tempNum === null) {
-      tempNum = 0;
-    }
-    if (num1 !== null && previousOperator !== null) {
-      if(percentVal !== null) {
-        num2 = getPercentage(num1, tempNum, percentVal);
-      } else {
-        num2 = tempNum;
-      }
-      total = operate(previousOperator, num1, num2);
-      console.log(num2);
-      display.textContent = total;
-      percentVal = null;
+    equalEnabled = true;
+    if (num1 == 0) {
+      num1 = tempNum;
     } else {
-      display.textContent = total;
+      num2 = getPercentage(num1, tempNum, percentVal);
     }
-    num1 = total;
     console.log('num1: ' + num1);
     console.log('num2: ' + num2);
-    console.log('total: ' + total);
-  }
+    console.log('op: ' + previousOperator);
 
-  if (e == 'Escape') {
-    num1 = null;
-    num2 = null;
-    total = 0;
-    tempNum = null;
-    operatorVal = null;
-    previousOperator = null;
+    if (previousOperator == null) {
+      total = num1;
+    } else {
+      total =  convertToScientificNotation(operate(previousOperator, num1, num2));
+    }
+    console.log('total: ' + total);
+    display.textContent = total;
+    num1 = total;
     percentVal = null;
-    display.textContent = '0';
   }
 
   if (e == '+/-') {
@@ -211,6 +200,17 @@ const performCalculations = (e) => {
     }
     operatorVal = null;
   }
+
+  if (e == 'Escape') {
+    num1 = 0;
+    num2 = 0;
+    total = 0;
+    tempNum = 0;
+    operatorVal = null;
+    previousOperator = null;
+    percentVal = null;
+    display.textContent = '0';
+  }
 }
 
 buttons.addEventListener('click', (e) => {
@@ -220,7 +220,8 @@ buttons.addEventListener('click', (e) => {
 
 document.addEventListener('keydown', function(e) {
   let eventKey = (e.key) ? e.key : KeyboardEvent.keyCode;
-  if (eventKey >= 0 && eventKey <= 9 || eventKey == 'Enter' || eventKey == '%' || eventKey == 'Escape' || eventKey == '/' || eventKey == '*' || eventKey == '-' || eventKey == '+' || eventKey == '=' || eventKey == '.') {
-    performCalculations(e.key);   
-  }
+  // if (eventKey >= 0 && eventKey <= 9 || eventKey == 'Enter' || eventKey == '%' || eventKey == 'Escape' || eventKey == '/' || eventKey == '*' || eventKey == '-' || eventKey == '+' || eventKey == '=' || eventKey == '.') {
+  //   performCalculations(e.key);   
+  // }
+  performCalculations(e.key);   
 });
