@@ -4,17 +4,20 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  /* border: 0.5px solid red; */
 }
 
 body {
   font-family: 'Ubuntu', sans-serif;
   font-size: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #edf2f4;
 }
 
 main {
- max-width: 300px;
- margin: 0 auto;
+ max-width: 350px;
+ margin-top: 100px;
 }
 
 .container {
@@ -23,7 +26,6 @@ main {
   max-width: 100%;
   margin: 1em 0;
   font-size: 1.5em;
-  border: 0.5px solid black;
 }
 
 #display {
@@ -33,21 +35,50 @@ main {
   justify-content:space-between;
   width: 100%;
   text-align: right;
-  padding: 0.14em 0.3em 0.1em;
-  border-bottom: 0.5px solid black;
-  font-size: 1.5em;
+  padding: 0.25em;
+  margin-bottom: 0.01em;
+  background-color: #8d99ae;
+  border: 1px #8d99ae;
+  font-size: 2em;
+  letter-spacing: 0.03em;
 }
 
+.longText{
+  font-size: .9em;
+}
 
 .btn {
   flex: 1 24.5%;
   aspect-ratio: 1 / 1;
   border: none;
-  margin: 1px 0.5px 1px;
-  font-size: inherit;
+  font-size: 1.25em;
+  background-color: #2b2d42;
+  color: #edf2f4;
+  
 }
 
 .btn:hover, .btn-active {
-  background-color: rgb(10, 14, 12);
-  color: beige;
+  background-color: #d90429;
+}
+
+footer{
+  padding: 0.8em;
+  color: #2b2d42;
+  flex: 0;
+}
+
+footer p{
+  font-size: 0.75em;
+  font-weight: 500;
+  height: 1.5em;
+  text-align: center;
+}
+
+footer a {
+  text-decoration: none;
+  color: #8d99ae;
+}
+
+footer a:hover {
+  color: #d90429;
 }
